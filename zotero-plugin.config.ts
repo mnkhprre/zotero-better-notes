@@ -3,7 +3,7 @@ import { defineConfig } from "zotero-plugin-scaffold";
 import { replaceInFile } from "replace-in-file";
 import { bundleTypes } from "./scripts/types/bundleTypes.mjs";
 
-const TEST_PREFS = {};
+const TEST_PREFS: Record<string, string | number | boolean> = {};
 // Disable user guide, keep in sync with src/modules/userGuide.ts
 TEST_PREFS[`${pkg.config.prefsPrefix}.latestTourVersion`] = 1;
 

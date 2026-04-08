@@ -212,6 +212,16 @@ async function getNoteTree(
   Zotero.getMainWindow().console.time(timeLabel);
 
   const noteLines = await getLinesInNote(note);
+  if (!noteLines || !Array.isArray(noteLines)) {
+    ztoolkit.log("[getNoteTree] noteLines is undefined or invalid, returning empty tree");
+    const tree = new TreeModel();
+    return tree.parse({
+      id: -1,
+      level: 0,
+      lineIndex: -1,
+      endIndex: -1,
+    });
+  }
   const parser = new DOMParser();
   const tree = new TreeModel();
   const root = tree.parse({

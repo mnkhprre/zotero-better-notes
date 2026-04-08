@@ -38,7 +38,7 @@ function registerReaderAnnotationButton() {
             createNoteFromAnnotation(
               reader._item.libraryID,
               annotationID!,
-              (e as MouseEvent).shiftKey ? "window" : "builtin",
+              (e as MouseEvent).shiftKey ? "builtin" : "native-window",
             );
             button.innerHTML = getAnnotationNoteButtonInnerHTML(true);
             e.preventDefault();
@@ -75,7 +75,7 @@ function createNoteFromAnnotationButton(
           createNoteFromAnnotation(
             reader._item.libraryID,
             annotationData.id,
-            (e as MouseEvent).shiftKey ? "window" : "builtin",
+            (e as MouseEvent).shiftKey ? "builtin" : "native-window",
           );
           button.innerHTML = getAnnotationNoteButtonInnerHTML(true);
           e.preventDefault();
@@ -152,7 +152,7 @@ async function hasNoteFromAnnotation(
 async function createNoteFromAnnotation(
   libraryID: number,
   itemKey: string,
-  openMode: "window" | "builtin" | undefined,
+  openMode: "native-window" | "builtin" | undefined,
 ) {
   const annotationItem = Zotero.Items.getByLibraryAndKey(
     libraryID,
@@ -171,6 +171,7 @@ async function createNoteFromAnnotation(
       if (linkParams.noteItem && linkParams.noteItem.isNote()) {
         addon.hooks.onOpenNote(linkParams.noteItem.id, openMode || "tab", {
           lineIndex: linkParams.lineIndex || undefined,
+          forceTakeover: true,
         });
         // Remove deprecated link tag and create a link in IndexedDB
         await addon.api.relation.linkAnnotationToTarget({
@@ -200,7 +201,9 @@ async function createNoteFromAnnotation(
       linkTarget.toKey,
     );
     if (targetItem) {
-      addon.hooks.onOpenNote(targetItem.id, openMode || "builtin", {});
+      addon.hooks.onOpenNote(targetItem.id, openMode || "builtin", {
+        forceTakeover: true,
+      });
       return;
     }
   }
@@ -215,7 +218,9 @@ async function createNoteFromAnnotation(
     "annotationItem, topItem, noteItem",
     [annotationItem, annotationItem.parentItem!.parentItem, note],
   );
-  await addLineToNote(note, renderedTemplate);
+
+  const insertionIndex = getPref("annotationNote.insertionIndex") as number;
+  await addLineToNote(note, renderedTemplate, insertionIndex);
 
   const tags = annotationItem.getTags();
   for (const tag of tags) {
@@ -231,7 +236,9 @@ async function createNoteFromAnnotation(
     url: addon.api.convert.note2link(note, { ignore: true })!,
   });
 
-  addon.hooks.onOpenNote(note.id, "builtin", {});
+  addon.hooks.onOpenNote(note.id, openMode || "native-window", {
+    forceTakeover: true,
+  });
 }
 
 async function syncAnnotationNoteTags(
