@@ -526,7 +526,7 @@ function initEditorPlugins(editor: Zotero.EditorInstance) {
                 .link2html(link, {
                   noteItem: note,
                   dryRun: true,
-                  usePosition: true,
+                  usePosition: false,
                 })
                 .then((content) => setContent(content));
             },
