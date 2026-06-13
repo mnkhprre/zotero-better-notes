@@ -174,7 +174,12 @@ class PluginState {
         const href = target.getAttribute("href");
         if (href) {
           this.options.openURL(href);
+          this._closePopup();
+          return;
         }
+      }
+      if (this.currentLink) {
+        this.options.openURL(this.currentLink);
       }
       this._closePopup();
     });

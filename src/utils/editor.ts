@@ -532,7 +532,12 @@ function initEditorPlugins(editor: Zotero.EditorInstance) {
                 .then((content) => setContent(content));
             },
             openURL: (url: string) => {
-              Zotero.getActiveZoteroPane().loadURI(url);
+              const note = addon.api.convert.link2note(url);
+              if (note) {
+                addon.hooks.onOpenNote(note.id, "window");
+              } else {
+                Zotero.getActiveZoteroPane().loadURI(url);
+              }
             },
             previewType,
           },
