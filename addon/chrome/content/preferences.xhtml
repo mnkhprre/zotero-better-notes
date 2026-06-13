@@ -50,6 +50,11 @@
     </radiogroup>
   </hbox>
   <checkbox
+    data-l10n-id="editor-paneNoteSection"
+    native="true"
+    preference="__prefsPrefix__.editor.paneNoteSection"
+  />
+  <checkbox
     data-l10n-id="editor-useMagicKey"
     native="true"
     preference="__prefsPrefix__.editor.useMagicKey"
@@ -109,6 +114,11 @@
       preference="__prefsPrefix__.syncAttachmentFolder"
     ></html:input>
   </hbox>
+  <checkbox
+    data-l10n-id="sync-autoSyncLinkedNotes"
+    native="true"
+    preference="__prefsPrefix__.sync.autoSyncLinkedNotes"
+  />
   <hbox align="center">
     <button
       onclick="Zotero.__addonInstance__.hooks.onShowSyncManager()"
@@ -127,6 +137,11 @@
 </groupbox>
 <groupbox>
   <label><html:h2 data-l10n-id="annotationNote-title"></html:h2></label>
+  <checkbox
+    data-l10n-id="annotationNote-enableCreateNoteButton"
+    native="true"
+    preference="__prefsPrefix__.annotationNote.enableCreateNoteButton"
+  />
   <checkbox
     data-l10n-id="annotationNote-enableTagSync"
     native="true"

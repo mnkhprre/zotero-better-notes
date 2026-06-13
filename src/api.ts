@@ -33,6 +33,7 @@ import {
   getMDFileName,
   findAllSyncedFiles,
 } from "./modules/sync/api";
+import { syncLinkedNoteOnEdit } from "./modules/sync/autoLink";
 import {
   runTemplate,
   runTextTemplate,
@@ -84,6 +85,14 @@ import {
   linkAnnotationToTarget,
   updateNoteLinkRelation,
 } from "./utils/relation";
+import {
+  registerEditorSection,
+  unregisterEditorSection,
+} from "./modules/editor/section";
+import {
+  registerMagicKeyCommand,
+  unregisterMagicKeyCommand,
+} from "./modules/editor/magicKey";
 import { getWorkspaceByUID } from "./utils/workspace";
 import { getString } from "./utils/locale";
 import { showRestartHint } from "./utils/hint";
@@ -104,6 +113,7 @@ const sync = {
   getMDStatusFromContent,
   getMDFileName,
   findAllSyncedFiles,
+  syncLinkedNoteOnEdit,
 };
 
 const convert = {
@@ -169,6 +179,10 @@ const editor = {
   getTextBetweenLines,
   moveHeading,
   updateHeadingTextAtLine,
+  registerSection: registerEditorSection,
+  unregisterSection: unregisterEditorSection,
+  registerMagicKeyCommand,
+  unregisterMagicKeyCommand,
 };
 
 const note = {

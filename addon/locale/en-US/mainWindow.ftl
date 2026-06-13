@@ -20,6 +20,9 @@ menuAddNote-newTemplateItemNote =
 menuAddNote-createMainNote =
     .label = Create Main Note
 
+menuCollection-exportNotes =
+    .label = Export Notes in Collection...
+
 menuTab-moveNewWindow =
     .label = Move to BN New Window
 menu-openNoteAsBNWindow =

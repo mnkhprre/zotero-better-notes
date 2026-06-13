@@ -4,6 +4,8 @@ import { initEditorPlugins } from "./plugins";
 import { initEditorMenu } from "./menu";
 import { initEditorPopup } from "./popup";
 import { initEditorToolbar } from "./toolbar";
+import { initEditorSections } from "./section";
+import { initEditorMagicKeyCommands } from "./magicKey";
 
 let prefsObserver = Symbol();
 
@@ -45,11 +47,23 @@ async function onEditorInstanceCreated(editor: Zotero.EditorInstance) {
   if (Zotero.ItemTypes.getID("note") !== editor._item.itemTypeID) {
     return;
   }
-  await injectEditorScripts(editor._iframeWindow);
-  injectEditorCSS(editor._iframeWindow);
-  initEditorImagePreviewer(editor);
-  await initEditorToolbar(editor);
-  initEditorPopup(editor);
-  initEditorMenu(editor);
-  initEditorPlugins(editor);
+  // The editor instance may be destroyed before the promise resolves
+  try {
+    await injectEditorScripts(editor._iframeWindow);
+    injectEditorCSS(editor._iframeWindow);
+    initEditorImagePreviewer(editor);
+    await initEditorToolbar(editor);
+    initEditorPopup(editor);
+    initEditorMenu(editor);
+    initEditorPlugins(editor);
+    await initEditorMagicKeyCommands(editor);
+    await initEditorSections(editor);
+  } catch (e) {
+    const isDead =
+      !Zotero.Notes._editorInstances.includes(editor) ||
+      Components.utils.isDeadWrapper(editor._iframeWindow);
+    if (!isDead) {
+      throw e;
+    }
+  }
 }

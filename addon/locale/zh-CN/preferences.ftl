@@ -16,6 +16,8 @@ editor-noteLinkPreview-ctrl =
     }
 editor-noteLinkPreview-disable = 
     .label = 从不
+editor-paneNoteSection = 
+    .label = 在条目/内容窗格笔记编辑器中显示入链/出链/关系图
 editor-useMagicKey =
     .label = 使用魔法键 "/" 显示命令面板
 editor-useMagicKeyShortcut = 
@@ -34,6 +36,8 @@ editor-pinTableTop =
 sync-title = 同步
 sync-period-label = 自动同步周期 (秒)
 sync-attachmentFolder-label = 附件文件夹
+sync-autoSyncLinkedNotes =
+    .label = 自动同步与已同步笔记相互链接的笔记
 sync-manager =
     .label = 打开同步管理器
 template-title = 模板
@@ -44,7 +48,9 @@ annotation-autoAnnotation =
     .label = 自动添加新批注到工作区笔记
 
 annotationNote-title = 从注释生成笔记
-annotationNote-enableTagSync = 
+annotationNote-enableCreateNoteButton =
+    .label = 在阅读器的注释上显示“从注释生成笔记”按钮
+annotationNote-enableTagSync =
     .label = 保持注释生成的笔记的标签与原始注释同步
 
 about-title = 关于

@@ -18,6 +18,9 @@ menuAddNote-newTemplateStandaloneNote =
 menuAddNote-createMainNote =
     .label = Ana Not Oluştur
 
+menuCollection-exportNotes =
+    .label = Export Notes in Collection...
+
 menuTab-moveNewWindow =
     .label = BN Yeni Penceresine Taşı
 menu-openNoteAsBNWindow =

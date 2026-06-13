@@ -10,11 +10,13 @@ declare namespace _ZoteroTypes {
       "syncNoteIds": string;
       "syncPeriodSeconds": number;
       "syncAttachmentFolder": string;
+      "sync.autoSyncLinkedNotes": boolean;
       "autoAnnotation": boolean;
       "insertLinkPosition": string;
       "workspace.outline.expandLevel": number;
       "workspace.outline.keepLinks": boolean;
       "editor.noteLinkPreviewType": string;
+      "editor.paneNoteSection": boolean;
       "editor.useMagicKey": boolean;
       "editor.useMagicKeyShortcut": boolean;
       "editor.useMarkdownPaste": boolean;
@@ -23,6 +25,7 @@ declare namespace _ZoteroTypes {
       "exportNotes.takeover": boolean;
       "annotationNote.enableTagSync": boolean;
       "annotationNote.insertionIndex": number;
+      "annotationNote.enableCreateNoteButton": boolean;
     };
   }
 }
