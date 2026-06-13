@@ -113,7 +113,7 @@ async function onMainWindowLoad(win: _ZoteroTypes.MainWindow): Promise<void> {
   // @ts-ignore
   if (typeof win.goBuildEditContextMenu !== "function") {
     // @ts-ignore
-    win.goBuildEditContextMenu = () => {};
+    win.goBuildEditContextMenu = () => { };
   }
 
   // Create ztoolkit for every window
@@ -316,8 +316,8 @@ async function onOpenNote<K extends keyof OpenNoteReturns>(
       mode = "preview" as K;
       workspaceUID = (
         currentWindow.document.querySelector("bn-workspace") as
-          | HTMLElement
-          | undefined
+        | HTMLElement
+        | undefined
       )?.dataset.uid;
     } else {
       mode = "tab" as K;
@@ -358,8 +358,8 @@ async function onCreateMainNote() {
   // Add to history
   const recentPref = String(
     Zotero.Prefs.get("betternotes.recentMainNoteIds") ||
-      Zotero.Prefs.get("Knowledge4Zotero.recentMainNoteIds") ||
-      "",
+    Zotero.Prefs.get("Knowledge4Zotero.recentMainNoteIds") ||
+    "",
   );
   let recentIds = recentPref.split(",").filter((id) => id.trim().length > 0);
   recentIds.unshift(String(noteItem.id));
