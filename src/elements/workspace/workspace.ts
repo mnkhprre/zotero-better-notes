@@ -252,9 +252,6 @@ export class Workspace extends PluginCEBase implements VirtualWorkspace {
     const state = {
       leftState: this._leftSplitter.getAttribute("state"),
       rightState: this._rightSplitter.getAttribute("state"),
-      leftWidth: window.getComputedStyle(this._outline)?.width,
-      centerWidth: window.getComputedStyle(this._editorContainer)?.width,
-      rightWidth: window.getComputedStyle(this._context)?.width,
     };
     setPref(persistKey, JSON.stringify(state));
   }
@@ -266,15 +263,6 @@ export class Workspace extends PluginCEBase implements VirtualWorkspace {
     }
     if (typeof state.rightState === "string") {
       this._rightSplitter.setAttribute("state", state.rightState);
-    }
-    if (state.leftWidth) {
-      this._outline.style.width = state.leftWidth;
-    }
-    if (state.centerWidth) {
-      this._editorContainer.style.width = state.centerWidth;
-    }
-    if (state.rightWidth) {
-      this._context.style.width = state.rightWidth;
     }
   }
 }
