@@ -100,18 +100,24 @@ export function registerMenus() {
         l10nID: `${config.addonRef}-menuCollection-exportNotes`,
         icon: `chrome://${config.addonRef}/content/icons/favicon.png`,
         onShowing: (_, context) => {
-          context.setVisible(context.collectionTreeRow?.type === "collection");
+          const rows = getContextCollectionTreeRows(context);
+          context.setVisible(
+            rows.length > 0 && rows.every((row) => row?.type === "collection"),
+          );
         },
         onCommand: (_, context) => {
-          const collection = context.collectionTreeRow?.ref as
-            | Zotero.Collection
-            | undefined;
-          if (!collection) {
+          const collections = getContextCollectionTreeRows(context)
+            .filter((row) => row?.type === "collection")
+            .map((row) => row.ref as Zotero.Collection);
+          if (!collections.length) {
             return;
           }
-          addon.hooks.onShowExportNoteOptions(
-            collection.getChildItems(true, false),
+          const itemIDs = new Set<number>(
+            collections.flatMap(
+              (collection) => collection.getChildItems(true, false) as number[],
+            ),
           );
+          addon.hooks.onShowExportNoteOptions([...itemIDs]);
         },
       },
     ],
@@ -206,4 +212,14 @@ export function registerMenus() {
       },
     ],
   });
+}
+
+// TEMP: Zotero 10 allows multi-selection in the collections tree and passes the
+// selected rows as `collectionTreeRows`; fall back to the singular
+// `collectionTreeRow` on older versions.
+function getContextCollectionTreeRows(context: any): any[] {
+  return (
+    context.collectionTreeRows ??
+    (context.collectionTreeRow ? [context.collectionTreeRow] : [])
+  );
 }

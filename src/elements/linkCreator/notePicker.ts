@@ -168,7 +168,7 @@ export class NotePicker extends PluginCEBase {
       }
       // @ts-ignore
       if (!row.ref.isNote()) return false;
-      if (this.itemsView.collectionTreeRow.isTrash()) {
+      if (this._itemsViewCollectionTreeRows[0]?.isTrash()) {
         // @ts-ignore
         return row.ref.deleted;
       } else {
@@ -358,39 +358,82 @@ export class NotePicker extends PluginCEBase {
     }
   }
 
-  async onCollectionSelected() {
-    const collectionTreeRow = this.collectionsView.getRow(
-      this.collectionsView.selection.focused,
+  // Rows currently shown in the items view. Newer Zotero exposes the plural
+  // `collectionTreeRows`; fall back to the singular `collectionTreeRow`.
+  get _itemsViewCollectionTreeRows(): any[] {
+    const view = this.itemsView as any;
+    if (!view) return [];
+    return (
+      view.collectionTreeRows ??
+      (view.collectionTreeRow ? [view.collectionTreeRow] : [])
     );
-    if (!this.collectionsView.selection.count) return;
-    // Collection not changed
+  }
+
+  // Selected rows of the collections tree, in list order. Newer Zotero allows
+  // multi-selection; on older versions this is a single-row array.
+  get _selectedCollectionTreeRows(): any[] {
+    const selection = this.collectionsView?.selection;
+    if (!selection?.count) return [];
+    return [...selection.selected]
+      .sort((a, b) => a - b)
+      .map((index) => this.collectionsView.getRow(index));
+  }
+
+  async onCollectionSelected() {
+    const collectionTreeRows = this._selectedCollectionTreeRows;
+    if (!collectionTreeRows.length) return;
+
+    // Mirror ZoteroPane.onCollectionSelected(): if the selected rows can't be
+    // combined in one items view, keep only the focused row. Reducing the
+    // selection re-triggers this handler with the single row.
+    if (collectionTreeRows.length > 1) {
+      const combinable = collectionTreeRows.every(
+        (row) => row.isCollection() || row.isSearch() || row.isLibrary(true),
+      );
+      const mixesVisibilityGroups =
+        new Set(collectionTreeRows.map((row) => row.visibilityGroup)).size > 1;
+      const mixesLibraryAndCollection =
+        collectionTreeRows.some((row) => row.isLibrary(true)) &&
+        collectionTreeRows.some((row) => row.isCollection() || row.isSearch());
+      if (!combinable || mixesVisibilityGroups || mixesLibraryAndCollection) {
+        this.collectionsView.selection.select(
+          this.collectionsView.selection.focused,
+        );
+        return;
+      }
+    }
+
+    // Collection selection not changed
+    const currentRows = this._itemsViewCollectionTreeRows;
     if (
-      this.itemsView &&
-      this.itemsView.collectionTreeRow &&
-      this.itemsView.collectionTreeRow.id == collectionTreeRow.id
+      currentRows.length &&
+      arraysEqual(
+        currentRows.map((row) => row.id),
+        collectionTreeRows.map((row) => row.id),
+      )
     ) {
       return;
     }
-    // @ts-ignore
-    if (!collectionTreeRow._bnPatched) {
-      // @ts-ignore
-      collectionTreeRow._bnPatched = true;
-      const getItems = collectionTreeRow.getItems.bind(collectionTreeRow);
-      // @ts-ignore
-      collectionTreeRow.getItems = async function () {
-        const items = (await getItems()) as Zotero.Item[];
-        return items.filter((item) => item.isNote()) as unknown[];
-      };
+
+    for (const collectionTreeRow of collectionTreeRows) {
+      if (!collectionTreeRow._bnPatched) {
+        collectionTreeRow._bnPatched = true;
+        const getItems = collectionTreeRow.getItems.bind(collectionTreeRow);
+        collectionTreeRow.getItems = async function () {
+          const items = (await getItems()) as Zotero.Item[];
+          return items.filter((item) => item.isNote()) as unknown[];
+        };
+      }
+      collectionTreeRow.setSearch("");
     }
-    collectionTreeRow.setSearch("");
-    Zotero.Prefs.set("lastViewedFolder", collectionTreeRow.id);
+    Zotero.Prefs.set("lastViewedFolder", collectionTreeRows[0].id);
 
     this.itemsView.setItemsPaneMessage(Zotero.getString("pane.items.loading"));
 
     // Load library data if necessary
-    const library = Zotero.Libraries.get(collectionTreeRow.ref.libraryID);
-    if (library) {
-      if (!library.getDataLoaded("item")) {
+    for (const collectionTreeRow of collectionTreeRows) {
+      const library = Zotero.Libraries.get(collectionTreeRow.ref.libraryID);
+      if (library && !library.getDataLoaded("item")) {
         Zotero.debug(
           "Waiting for items to load for library " + library.libraryID,
         );
@@ -398,7 +441,13 @@ export class NotePicker extends PluginCEBase {
       }
     }
 
-    await this.itemsView.changeCollectionTreeRow(collectionTreeRow);
+    // Newer Zotero replaces changeCollectionTreeRow() with the plural form
+    const view = this.itemsView as any;
+    if (typeof view.changeCollectionTreeRows === "function") {
+      await view.changeCollectionTreeRows(collectionTreeRows);
+    } else {
+      await view.changeCollectionTreeRow(collectionTreeRows[0]);
+    }
 
     this.itemsView.clearItemsPaneMessage();
 
@@ -545,7 +594,7 @@ export class NotePicker extends PluginCEBase {
   }
 }
 
-function arraysEqual(arr1: number[], arr2: number[]): boolean {
+function arraysEqual<T>(arr1: T[], arr2: T[]): boolean {
   if (arr1.length !== arr2.length) return false;
 
   const set1 = new Set(arr1);
