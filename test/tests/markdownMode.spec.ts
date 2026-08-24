@@ -71,23 +71,31 @@ describe("MarkdownMode", function () {
     await note2.saveTx();
 
     try {
-      // Defaults: rich text, toggle button visible (added asynchronously
-      // after the editor init)
+      // Start from the shipped defaults regardless of what earlier runs left
+      // in the profile
+      Zotero.Prefs.clear(defaultPref, true);
+      Zotero.Prefs.clear(togglePref, true);
+      assert.isFalse(!!Zotero.Prefs.get(togglePref, true));
+      assert.isFalse(!!Zotero.Prefs.get(defaultPref, true));
+
+      // Defaults: rich text, and no toggle button (hidden by default). The
+      // button insert is async after the editor init; wait for the toolbar
+      // it would attach to before asserting its absence.
       const editor = await openNoteEditor(note);
       const doc = editor._iframeWindow.document;
-      await wait.waitUtilAsync(
-        () => !!doc.querySelector(".toolbar .bn-md-toggle"),
-      );
+      await wait.waitUtilAsync(() => !!doc.querySelector(".toolbar .start"));
       assert.isFalse(addon.api.editor.isMarkdownMode(editor));
+      assert.notExists(doc.querySelector(".toolbar .bn-md-toggle"));
 
-      // Hiding the toggle button applies to open editors immediately
-      Zotero.Prefs.set(togglePref, false, true);
-      await wait.waitUtilAsync(
-        () => !doc.querySelector(".toolbar .bn-md-toggle"),
-      );
+      // Showing the toggle button applies to open editors immediately
       Zotero.Prefs.set(togglePref, true, true);
       await wait.waitUtilAsync(
         () => !!doc.querySelector(".toolbar .bn-md-toggle"),
+      );
+      // ...and so does hiding it again
+      Zotero.Prefs.set(togglePref, false, true);
+      await wait.waitUtilAsync(
+        () => !doc.querySelector(".toolbar .bn-md-toggle"),
       );
 
       // With markdown as the default mode, a newly opened note starts in it
@@ -100,8 +108,8 @@ describe("MarkdownMode", function () {
       await addon.api.editor.toggleMarkdownMode(editor2);
       assert.isFalse(addon.api.editor.isMarkdownMode(editor2));
     } finally {
-      Zotero.Prefs.set(defaultPref, false, true);
-      Zotero.Prefs.set(togglePref, true, true);
+      Zotero.Prefs.clear(defaultPref, true);
+      Zotero.Prefs.clear(togglePref, true);
     }
     await Zotero.Items.erase(note.id);
     await Zotero.Items.erase(note2.id);
