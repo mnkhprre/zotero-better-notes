@@ -118,7 +118,7 @@ function getMDStatusFromContent(contentRaw: string): MDStatus {
     filename: "",
     lastmodify: new Date(0),
   };
-  if (result) {
+  if (result && contentRaw.startsWith(result[0])) {
     const yaml = result[0].replace(/---/g, "");
     ret.content = contentRaw.slice(result[0].length);
     try {
