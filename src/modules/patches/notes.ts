@@ -37,7 +37,7 @@ export function patchNotes() {
         if (!workspace) {
           return;
         }
-        workspace.toggleOutline(width);
+        workspace.setOutlineWidth(width);
       },
     enabled: true,
     pluginID: config.addonID,

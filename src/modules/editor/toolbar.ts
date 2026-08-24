@@ -41,13 +41,18 @@ export async function initEditorToolbar(editor: Zotero.EditorInstance) {
     ztoolkit.log("Editor toolbar not found");
     return;
   }
+  // A reloaded plugin can run against an editor iframe that still contains
+  // the previous load's buttons
+  toolbar
+    .querySelectorAll(".bn-editor-tool, .bn-toggle-left-pane")
+    .forEach((elem) => elem.remove());
   // Link creator
   registerEditorToolbarElement(
     editor,
     toolbar,
     "start",
     ztoolkit.UI.createElement(_document, "button", {
-      classList: ["toolbar-button"],
+      classList: ["toolbar-button", "bn-editor-tool", "bn-link-creator"],
       properties: {
         innerHTML: ICONS.linkCreator,
         title: "Link creator",
@@ -74,7 +79,7 @@ export async function initEditorToolbar(editor: Zotero.EditorInstance) {
       toolbar,
       "start",
       ztoolkit.UI.createElement(_document, "button", {
-        classList: ["toolbar-button", "bn-toggle-left-pane"],
+        classList: ["toolbar-button", "bn-editor-tool", "bn-toggle-left-pane"],
         properties: {
           innerHTML: ICONS.workspaceToggle,
           title: "Toggle left pane",
