@@ -120,7 +120,14 @@ async function createNote(
       return true;
     }
     noteItem = new Zotero.Item("note");
-    noteItem.libraryID = ZoteroPane.getSelectedLibraryID();
+    let libraryID: number;
+    if (ZoteroPane.getSelectedLibraryIDs) {
+      libraryID = ZoteroPane.getSelectedLibraryIDs()[0];
+    }
+    else {
+      libraryID = ZoteroPane.getSelectedLibraryID();
+    }
+    noteItem.libraryID = libraryID;
     if (cRow.type === "collection") {
       noteItem.addToCollection(cRow.ref.id);
     }
