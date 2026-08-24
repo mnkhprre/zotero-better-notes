@@ -123,8 +123,7 @@ async function createNote(
     let libraryID: number;
     if (ZoteroPane.getSelectedLibraryIDs) {
       libraryID = ZoteroPane.getSelectedLibraryIDs()[0];
-    }
-    else {
+    } else {
       libraryID = ZoteroPane.getSelectedLibraryID();
     }
     noteItem.libraryID = libraryID;
