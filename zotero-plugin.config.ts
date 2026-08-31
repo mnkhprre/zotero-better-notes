@@ -40,9 +40,6 @@ export default defineConfig({
         bundle: true,
         target: "firefox115",
         outfile: `build/addon/chrome/content/scripts/${pkg.config.addonRef}.js`,
-        banner: {
-          js: `(function(){try{if(typeof ChromeUtils!=="undefined"&&typeof ChromeUtils.import==="function"){var _orig=ChromeUtils.import;ChromeUtils.import=function(p){try{return _orig.call(ChromeUtils,p)}catch(e){return ChromeUtils.importESModule(p)}}}}catch(e){})();`,
-        },
       },
       {
         entryPoints: ["src/extras/*.*"],
@@ -52,9 +49,6 @@ export default defineConfig({
         outdir: "build/addon/chrome/content/scripts",
         bundle: true,
         target: ["firefox115"],
-        banner: {
-          js: `(function(){try{if(typeof ChromeUtils!=="undefined"&&typeof ChromeUtils.import==="function"){var _orig=ChromeUtils.import;ChromeUtils.import=function(p){try{return _orig.call(ChromeUtils,p)}catch(e){return ChromeUtils.importESModule(p)}}}}catch(e){})();`,
-        },
       },
     ],
     prefs: {
@@ -62,6 +56,19 @@ export default defineConfig({
     },
     hooks: {
       "build:bundle": async (ctx) => {
+        // Patch toolkit's _importESModule to always use importESModule (Zotero 10 compat)
+        // ChromeUtils.import() was removed in Zotero 10 (Fx128+) but the function
+        // still exists as a stub that throws. Replace the single ChromeUtils.import call.
+        const importPatch = await replaceInFile({
+          files: [
+            "build/addon/chrome/content/scripts/*.js",
+          ],
+          from: /return ChromeUtils\.import\(path3\)/g,
+          to: `return ChromeUtils.importESModule(path3, {global:"contextual"})`,
+        });
+        if (importPatch.some((r) => r.hasChanged)) {
+          console.log("Patched _importESModule for Zotero 10 compatibility");
+        }
         await Promise.all([
           replaceInFile({
             files: ["README.md"],
