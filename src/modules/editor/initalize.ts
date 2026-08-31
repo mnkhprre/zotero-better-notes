@@ -1,4 +1,3 @@
-import { PatchHelper } from "zotero-plugin-toolkit";
 import { initEditorImagePreviewer } from "./image";
 import { injectEditorCSS, injectEditorScripts } from "./inject";
 import { initEditorPlugins } from "./plugins";
@@ -9,18 +8,19 @@ import { initEditorSections } from "./section";
 import { initEditorMagicKeyCommands } from "./magicKey";
 
 let prefsObserver = Symbol();
+let originalRegisterEditorInstance: typeof Zotero.Notes.registerEditorInstance;
 
 export function registerEditorInstanceHook() {
-  new PatchHelper().setData({
-    target: Zotero.Notes,
-    funcSign: "registerEditorInstance",
-    patcher: (origin) =>
-      function (this: typeof Zotero.Notes, instance: Zotero.EditorInstance) {
-        origin.apply(this, [instance]);
-        onEditorInstanceCreated(instance);
-      },
-    enabled: true,
-  });
+  // PatchHelper from zotero-plugin-toolkit uses ChromeUtils.import() which is
+  // removed in Zotero 10 (Fx128+). Use direct function replacement instead.
+  originalRegisterEditorInstance = Zotero.Notes.registerEditorInstance;
+  Zotero.Notes.registerEditorInstance = function (
+    this: typeof Zotero.Notes,
+    instance: Zotero.EditorInstance,
+  ) {
+    originalRegisterEditorInstance.apply(this, [instance]);
+    onEditorInstanceCreated(instance);
+  };
   Zotero.Notes._editorInstances.forEach(onEditorInstanceCreated);
 
   // For unknown reasons, the css becomes undefined after font size change
@@ -32,6 +32,9 @@ export function registerEditorInstanceHook() {
 }
 
 export function unregisterEditorInstanceHook() {
+  if (originalRegisterEditorInstance) {
+    Zotero.Notes.registerEditorInstance = originalRegisterEditorInstance;
+  }
   Zotero.Prefs.unregisterObserver(prefsObserver);
 }
 
