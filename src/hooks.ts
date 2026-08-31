@@ -96,7 +96,12 @@ async function onStartup() {
 }
 
 async function onMainWindowLoad(win: _ZoteroTypes.MainWindow): Promise<void> {
-  await waitUtilAsync(() => win.document.readyState === "complete");
+  try {
+    await waitUtilAsync(() => win.document.readyState === "complete");
+  } catch (e) {
+    ztoolkit.log("[BN] onMainWindowLoad waitUtilAsync failed", e);
+    return;
+  }
 
   Services.scriptloader.loadSubScript(
     `chrome://${config.addonRef}/content/scripts/customElements.js`,

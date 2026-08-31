@@ -12,24 +12,45 @@ import { config } from "../../../package.json";
 let prefsObserver = Symbol();
 
 export function registerEditorInstanceHook() {
-  new PatchHelper().setData({
-    target: Zotero.Notes,
-    funcSign: "registerEditorInstance",
-    patcher: (origin) =>
-      function (this: typeof Zotero.Notes, instance: Zotero.EditorInstance) {
-        origin.apply(this, [instance]);
+  try {
+    ztoolkit.log(`[BN] Zotero.Notes: ${typeof Zotero.Notes}`);
+    ztoolkit.log(`[BN] registerEditorInstance: ${typeof Zotero.Notes?.registerEditorInstance}`);
+    ztoolkit.log(`[BN] _editorInstances: ${typeof Zotero.Notes?._editorInstances} len=${Zotero.Notes?._editorInstances?.length}`);
+  } catch (e) {
+    ztoolkit.log(`[BN] pre-check error`, e);
+  }
+
+  try {
+    new PatchHelper().setData({
+      target: Zotero.Notes,
+      funcSign: "registerEditorInstance",
+      patcher: (origin) =>
+        function (this: typeof Zotero.Notes, instance: Zotero.EditorInstance) {
+          origin.apply(this, [instance]);
+          onEditorInstanceCreated(instance).catch((e) =>
+            ztoolkit.log("[BN editor init] error", e),
+          );
+        },
+      enabled: true,
+      pluginID: config.addonID,
+    });
+    ztoolkit.log("[BN] PatchHelper applied successfully");
+  } catch (e) {
+    ztoolkit.log("[BN] PatchHelper error", e);
+  }
+
+  try {
+    if (Zotero.Notes?._editorInstances) {
+      ztoolkit.log(`[BN] Patching ${Zotero.Notes._editorInstances.length} existing editors`);
+      Zotero.Notes._editorInstances.forEach((instance) => {
         onEditorInstanceCreated(instance).catch((e) =>
           ztoolkit.log("[BN editor init] error", e),
         );
-      },
-    enabled: true,
-    pluginID: config.addonID,
-  });
-  Zotero.Notes._editorInstances.forEach((instance) => {
-    onEditorInstanceCreated(instance).catch((e) =>
-      ztoolkit.log("[BN editor init] error", e),
-    );
-  });
+      });
+    }
+  } catch (e) {
+    ztoolkit.log("[BN] _editorInstances iteration error", e);
+  }
 
   prefsObserver = Zotero.Prefs.registerObserver("note.fontSize", () => {
     Zotero.Notes._editorInstances.forEach((editor) => {

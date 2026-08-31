@@ -43,7 +43,7 @@ export function waitUtilAsync(
         resolve();
       } else if (Date.now() - start > timeout) {
         clearInterval(intervalId);
-        reject();
+        reject(new Error("waitUtilAsync timeout"));
       }
     }, interval);
   });
