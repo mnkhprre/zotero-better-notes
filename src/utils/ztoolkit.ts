@@ -1,7 +1,6 @@
 import {
   BasicTool,
   UITool,
-  MenuManager,
   ClipboardHelper,
   FilePickerHelper,
   ProgressWindowHelper,
@@ -17,11 +16,6 @@ export { createZToolkit };
 
 function createZToolkit() {
   const _ztoolkit = new MyToolkit();
-  /**
-   * Alternatively, import toolkit modules you use to minify the plugin size.
-   * You can add the modules under the `MyToolkit` class below and uncomment the following line.
-   */
-  // const _ztoolkit = new MyToolkit();
   initZToolkit(_ztoolkit);
   return _ztoolkit;
 }
@@ -42,7 +36,6 @@ function initZToolkit(_ztoolkit: ReturnType<typeof createZToolkit>) {
 
 class MyToolkit extends BasicTool {
   UI: UITool;
-  Menu: MenuManager;
   Clipboard: typeof ClipboardHelper;
   FilePicker: typeof FilePickerHelper;
   ProgressWindow: typeof ProgressWindowHelper;
@@ -54,7 +47,6 @@ class MyToolkit extends BasicTool {
   constructor() {
     super();
     this.UI = new UITool(this);
-    this.Menu = new MenuManager(this);
     this.Clipboard = ClipboardHelper;
     this.FilePicker = FilePickerHelper;
     this.ProgressWindow = ProgressWindowHelper;

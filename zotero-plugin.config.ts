@@ -2,8 +2,6 @@ import pkg from "./package.json";
 import { defineConfig } from "zotero-plugin-scaffold";
 import { replaceInFile } from "replace-in-file";
 import { bundleTypes } from "./scripts/types/bundleTypes.mjs";
-import { readFileSync, writeFileSync, readdirSync } from "fs";
-import { join } from "path";
 
 const TEST_PREFS: Record<string, string | number | boolean> = {};
 // Disable user guide, keep in sync with src/modules/userGuide.ts
@@ -58,30 +56,6 @@ export default defineConfig({
     },
     hooks: {
       "build:bundle": async (ctx) => {
-        // Patch toolkit's _importESModule to always use importESModule (Zotero 10 compat)
-        // ChromeUtils.import() was removed in Zotero 10 (Fx128+) but the function
-        // still exists as a stub that throws. Replace the entire function body.
-        const scriptsDir = "build/addon/chrome/content/scripts";
-        const files = readdirSync(scriptsDir)
-          .filter((f) => f.endsWith(".js"))
-          .map((f) => join(scriptsDir, f));
-        let patched = false;
-        for (const filePath of files) {
-          const content = readFileSync(filePath, "utf8");
-          // Match the entire _importESModule function body
-          const replaced = content.replace(
-            /function _importESModule\((\w+)\)\s*\{[\s\S]*?return ChromeUtils\.import\(\1\);[\s\S]*?\}/,
-            `function _importESModule($1){return ChromeUtils.importESModule($1,{global:"contextual"})}`,
-          );
-          if (replaced !== content) {
-            writeFileSync(filePath, replaced);
-            patched = true;
-            console.log(`Patched _importESModule in ${filePath}`);
-          }
-        }
-        if (!patched) {
-          console.log("WARNING: No _importESModule function found to patch");
-        }
         await Promise.all([
           replaceInFile({
             files: ["README.md"],

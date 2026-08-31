@@ -32,7 +32,7 @@ async function note2mm(
     textNodeForEach(doc.body, (e: Text) => {
       e.data = htmlEscape(doc, e.data);
     });
-    lines = (await parseHTMLLines(doc.body.innerHTML)).map((line) =>
+    lines = (await parseHTMLLines(doc.body.innerHTML)).map((line: string) =>
       htmlUnescape(line),
     );
   }
