@@ -10,9 +10,9 @@ var chromeHandle;
 function install(data, reason) {}
 
 async function startup({ id, version, resourceURI, rootURI }, reason) {
-  dump("[BN] bootstrap startup called\n");
+  Zotero.Debug.write("[BN] bootstrap startup called\n");
   await Zotero.initializationPromise;
-  dump("[BN] Zotero.initializationPromise resolved\n");
+  Zotero.Debug.write("[BN] Zotero.initializationPromise resolved\n");
 
   var aomStartup = Components.classes[
     "@mozilla.org/addons/addon-manager-startup;1"
@@ -40,13 +40,14 @@ async function startup({ id, version, resourceURI, rootURI }, reason) {
   };
   ctx._globalThis = ctx;
 
+  Zotero.Debug.write("[BN] loading script...\n");
   Services.scriptloader.loadSubScript(
     `${rootURI}/chrome/content/scripts/__addonRef__.js`,
     ctx,
   );
-  dump("[BN] script loaded, calling onStartup\n");
+  Zotero.Debug.write("[BN] script loaded, calling onStartup\n");
   await Zotero.__addonInstance__.hooks.onStartup();
-  dump("[BN] onStartup completed\n");
+  Zotero.Debug.write("[BN] onStartup completed\n");
 }
 
 function onMainWindowLoad({ window: win }) {

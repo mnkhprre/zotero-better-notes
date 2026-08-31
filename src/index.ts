@@ -2,7 +2,8 @@ import { BasicTool } from "zotero-plugin-toolkit";
 import Addon from "./addon";
 import { config } from "../package.json";
 
-dump("[BN] index.ts loaded\n");
+// @ts-ignore
+Zotero.Debug.write("[BN] index.ts loaded\n");
 
 const basicTool = new BasicTool();
 
