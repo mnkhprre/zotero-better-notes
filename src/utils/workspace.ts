@@ -7,7 +7,14 @@ export {
   OutlineType,
   VirtualWorkspace,
   WorkspaceTab,
+  SIDEBAR_DEFAULT_WIDTH,
+  SIDEBAR_MIN_WIDTH,
 };
+
+// Keep in sync with min-width of bn-outline in styles/workspace/outline.css
+const SIDEBAR_MIN_WIDTH = 140;
+// Same as SIDEBAR_DEFAULT_WIDTH in Zotero's tabs.js
+const SIDEBAR_DEFAULT_WIDTH = 240;
 
 enum OutlineType {
   empty = 0,
@@ -113,21 +120,32 @@ class WorkspaceTab implements VirtualWorkspace {
     }
 
     let open: boolean;
-    let width: number | false = false;
     if (typeof param === "number") {
       open = param > 0;
-      width = param;
     } else {
-      open = param ?? outlineContainer?.getAttribute("collapsed") === "true";
+      open = param ?? outlineContainer.hasAttribute("collapsed");
     }
 
-    outlineContainer.setAttribute("collapsed", open ? "false" : "true");
-    if (typeof width === "number") {
+    let width: number | false = false;
+    if (open) {
+      if (typeof param === "number") {
+        width = Math.max(param, SIDEBAR_MIN_WIDTH);
+      } else {
+        const savedWidth = win.Zotero_Tabs.getSidebarState("note").width;
+        width =
+          savedWidth >= SIDEBAR_MIN_WIDTH ? savedWidth : SIDEBAR_DEFAULT_WIDTH;
+      }
       outlineContainer.style.width = `${width}px`;
     }
-    // @ts-ignore
-    this._tabContent.sidebarWidth = param;
-    win.Zotero_Tabs.updateSidebarLayout({ width: param });
+
+    outlineContainer.toggleAttribute("collapsed", !open);
+    // Dragging the splitter to the collapse point sets state="collapsed",
+    // which keeps the pane hidden regardless of its `collapsed` attribute
+    this._tabContent
+      .querySelector("#bn-outline-splitter")
+      ?.setAttribute("state", open ? "" : "collapsed");
+
+    win.Zotero_Tabs.updateSidebarLayout({ width });
     win.ZoteroContextPane.update();
 
     this.updateToggleOutlineButton();
