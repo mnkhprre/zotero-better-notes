@@ -58,13 +58,13 @@ export default defineConfig({
       "build:bundle": async (ctx) => {
         // Patch toolkit's _importESModule to always use importESModule (Zotero 10 compat)
         // ChromeUtils.import() was removed in Zotero 10 (Fx128+) but the function
-        // still exists as a stub that throws. Replace the single ChromeUtils.import call.
+        // still exists as a stub that throws. Replace all ChromeUtils.import calls.
         const importPatch = await replaceInFile({
           files: [
             "build/addon/chrome/content/scripts/*.js",
           ],
-          from: /return ChromeUtils\.import\(path3\)/g,
-          to: `return ChromeUtils.importESModule(path3, {global:"contextual"})`,
+          from: /return ChromeUtils\.import\((\w+)\)/g,
+          to: `return ChromeUtils.importESModule($1, {global:"contextual"})`,
         });
         if (importPatch.some((r) => r.hasChanged)) {
           console.log("Patched _importESModule for Zotero 10 compatibility");
