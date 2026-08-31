@@ -40,6 +40,9 @@ export default defineConfig({
         bundle: true,
         target: "firefox115",
         outfile: `build/addon/chrome/content/scripts/${pkg.config.addonRef}.js`,
+        banner: {
+          js: `(function(){try{if(typeof ChromeUtils!=="undefined"&&typeof ChromeUtils.import==="function"){var _orig=ChromeUtils.import;ChromeUtils.import=function(p){try{return _orig.call(ChromeUtils,p)}catch(e){return ChromeUtils.importESModule(p)}}}}catch(e){})();`,
+        },
       },
       {
         entryPoints: ["src/extras/*.*"],
@@ -49,6 +52,9 @@ export default defineConfig({
         outdir: "build/addon/chrome/content/scripts",
         bundle: true,
         target: ["firefox115"],
+        banner: {
+          js: `(function(){try{if(typeof ChromeUtils!=="undefined"&&typeof ChromeUtils.import==="function"){var _orig=ChromeUtils.import;ChromeUtils.import=function(p){try{return _orig.call(ChromeUtils,p)}catch(e){return ChromeUtils.importESModule(p)}}}}catch(e){})();`,
+        },
       },
     ],
     prefs: {
