@@ -10,6 +10,24 @@ var chromeHandle;
 function install(data, reason) {}
 
 async function startup({ id, version, resourceURI, rootURI }, reason) {
+  // Zotero 10 (Fx128+): ChromeUtils.import() was removed but still exists as
+  // a stub that throws. Monkey-patch it to redirect to importESModule so that
+  // zotero-plugin-toolkit (and any other legacy code) works correctly.
+  if (
+    typeof ChromeUtils !== "undefined" &&
+    typeof ChromeUtils.import === "function" &&
+    typeof ChromeUtils.importESModule === "function"
+  ) {
+    const _origImport = ChromeUtils.import;
+    ChromeUtils.import = function (path, ...args) {
+      try {
+        return _origImport.call(ChromeUtils, path, ...args);
+      } catch {
+        return ChromeUtils.importESModule(path, ...args);
+      }
+    };
+  }
+
   await Zotero.initializationPromise;
 
   var aomStartup = Components.classes[
