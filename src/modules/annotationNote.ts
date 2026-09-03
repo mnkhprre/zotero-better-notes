@@ -147,6 +147,18 @@ async function hasNoteFromAnnotation(
     return false;
   }
 
+  if (annotationItem.annotationComment) {
+    const match = annotationItem.annotationComment.match(
+      /zotero:\/\/note\/[^\s"\)]+/,
+    );
+    if (match) {
+      const linkParams = getNoteLinkParams(match[0]);
+      if (linkParams.noteItem && linkParams.noteItem.isNote()) {
+        return true;
+      }
+    }
+  }
+
   const linkTarget = await addon.api.relation.getLinkTargetByAnnotation(
     annotationItem.libraryID,
     annotationItem.key,
@@ -175,6 +187,28 @@ async function createNoteFromAnnotation(
   ) as Zotero.Item;
   if (!annotationItem) {
     return;
+  }
+
+  // Check if the annotation comment has a note link
+  if (annotationItem.annotationComment) {
+    const match = annotationItem.annotationComment.match(
+      /zotero:\/\/note\/[^\s"\)]+/,
+    );
+    if (match) {
+      const linkParams = getNoteLinkParams(match[0]);
+      if (linkParams.noteItem && linkParams.noteItem.isNote()) {
+        addon.hooks.onOpenNote(linkParams.noteItem.id, openMode || "builtin", {
+          lineIndex: linkParams.lineIndex || undefined,
+          ...(openMode === "window" || openMode === "native-window"
+            ? {
+                forceTakeover: true,
+                workspaceUID,
+              }
+            : {}),
+        });
+        return;
+      }
+    }
   }
 
   // Check if the annotation has a note link tag
@@ -262,12 +296,23 @@ async function createNoteFromAnnotation(
   }
   await note.saveTx();
 
+  const noteLink = addon.api.convert.note2link(note);
+
+  // Append note link to annotation comment as in 0.8.8
+  if (noteLink) {
+    const existingComment = annotationItem.annotationComment || "";
+    annotationItem.annotationComment = existingComment
+      ? `${existingComment}\n\nnote link: "${noteLink}"`
+      : `note link: "${noteLink}"`;
+    await annotationItem.saveTx();
+  }
+
   await addon.api.relation.linkAnnotationToTarget({
     fromLibID: annotationItem.libraryID,
     fromKey: annotationItem.key,
     toLibID: note.libraryID,
     toKey: note.key,
-    url: addon.api.convert.note2link(note, { ignore: true })!,
+    url: noteLink || addon.api.convert.note2link(note, { ignore: true })!,
   });
 
   addon.hooks.onOpenNote(note.id, openMode || "builtin", {
