@@ -51,6 +51,10 @@ const DEFAULT_TEMPLATES = <NoteTemplate[]>[
     }
   }
   res += await Zotero.BetterNotes.api.convert.annotations2html([annotationItem], {noteItem, ignoreComment: true});
+  const noteLink = Zotero.BetterNotes.api.convert.note2link(noteItem);
+  if (noteLink) {
+    res += \`<p>note link: "\${noteLink}"</p>\`;
+  }
   return res;
 }}$`,
   },
