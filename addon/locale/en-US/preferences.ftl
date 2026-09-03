@@ -58,6 +58,11 @@ annotationNote-enableCreateNoteButton =
     .label = Show the "Create note from annotation" button on annotations in the reader
 annotationNote-enableTagSync =
     .label = Keep tags of note from annotation in sync with the original annotation
+annotationNote-insertion-label = Insert new annotations into:
+annotationNote-insertion-start = 
+    .label = Start of note
+annotationNote-insertion-end = 
+    .label = End of note
 
 about-title = About
 help =

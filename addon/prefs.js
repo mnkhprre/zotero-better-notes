@@ -24,4 +24,5 @@ pref("__prefsPrefix__.editor.pinTableTop", true);
 pref("__prefsPrefix__.exportNotes.takeover", true);
 
 pref("__prefsPrefix__.annotationNote.enableTagSync", true);
+pref("__prefsPrefix__.annotationNote.insertionIndex", 0);
 pref("__prefsPrefix__.annotationNote.enableCreateNoteButton", true);

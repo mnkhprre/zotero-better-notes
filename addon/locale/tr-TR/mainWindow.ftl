@@ -17,14 +17,20 @@ menuAddNote-newTemplateStandaloneNote =
     .label = Şablondan Yeni Bağımsız Not
 menuAddNote-newTemplateItemNote =
     .label = Şablondan Yeni Öğe Notu
+menuAddNote-createMainNote =
+    .label = Ana Not Oluştur
 
 menuCollection-exportNotes =
     .label = Export Notes in Collection...
 
 menuTab-moveNewWindow =
-    .label = Move to BN New Window
+    .label = BN Yeni Penceresine Taşı
 menu-openNoteAsBNWindow =
-    .label = Notu BN Yeni Pencereinde Aç
+    .label = Notu BN Yeni Penceresinde Aç
+menu-setAsMainNote =
+    .label = Ana Not Olarak Ayarla
+menu-openInWorkspaceTab =
+    .label = Çalışma Alanı Sekmesinde Aç
 
 menuTools-libraryGraph =
     .label = Not İlişki Grafiği

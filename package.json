@@ -23,14 +23,14 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/windingwind/zotero-better-notes.git"
+    "url": "git+https://github.com/mnkhprre/zotero-better-notes.git"
   },
-  "author": "windingwind",
+  "author": "mnkhprre",
   "license": "AGPL-3.0-or-later",
   "bugs": {
-    "url": "https://github.com/windingwind/zotero-better-notes/issues"
+    "url": "https://github.com/mnkhprre/zotero-better-notes/issues"
   },
-  "homepage": "https://github.com/windingwind/zotero-better-notes#readme",
+  "homepage": "https://github.com/mnkhprre/zotero-better-notes#readme",
   "dependencies": {
     "@codemirror/commands": "^6.10.4",
     "@codemirror/lang-markdown": "^6.5.0",

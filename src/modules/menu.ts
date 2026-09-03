@@ -1,5 +1,15 @@
 import { config } from "../../package.json";
 
+interface BNMenuContext {
+  items?: Zotero.Item[];
+  tabType: string;
+  tabID: string;
+  menuElem: XULElement;
+  setVisible: (visible: boolean) => void;
+  collectionTreeRow?: any;
+  collectionTreeRows?: any[];
+}
+
 export function registerMenus() {
   Zotero.MenuManager.registerMenu({
     menuID: `${config.addonRef}-menuTools`,
@@ -87,6 +97,12 @@ export function registerMenus() {
         icon: `chrome://${config.addonRef}/content/icons/favicon.png`,
         onCommand: () => addon.hooks.onCreateNoteFromTemplate("standalone"),
       },
+      {
+        menuType: "menuitem",
+        l10nID: `${config.addonRef}-menuAddNote-createMainNote`,
+        icon: `chrome://${config.addonRef}/content/icons/favicon.png`,
+        onCommand: () => addon.hooks.onCreateMainNote(),
+      },
     ],
   });
 
@@ -99,13 +115,13 @@ export function registerMenus() {
         menuType: "menuitem",
         l10nID: `${config.addonRef}-menuCollection-exportNotes`,
         icon: `chrome://${config.addonRef}/content/icons/favicon.png`,
-        onShowing: (_, context) => {
+        onShowing: (_, context: BNMenuContext) => {
           const rows = getContextCollectionTreeRows(context);
           context.setVisible(
             rows.length > 0 && rows.every((row) => row?.type === "collection"),
           );
         },
-        onCommand: (_, context) => {
+        onCommand: (_, context: BNMenuContext) => {
           const collections = getContextCollectionTreeRows(context)
             .filter((row) => row?.type === "collection")
             .map((row) => row.ref as Zotero.Collection);
@@ -174,10 +190,11 @@ export function registerMenus() {
       {
         menuType: "menuitem",
         l10nID: `${config.addonRef}-menuTab-moveNewWindow`,
-        onShowing(_, context) {
+        onShowing(_, context: BNMenuContext) {
           context.setVisible(context.tabType.startsWith("note"));
         },
-        onCommand: (_, context) => {
+        onCommand: (_, context: BNMenuContext) => {
+          if (!context.items?.[0]) return;
           addon.hooks.onOpenNote(context.items[0].id, "window", {
             forceTakeover: true,
           });
@@ -196,12 +213,91 @@ export function registerMenus() {
     menus: [
       {
         menuType: "menuitem",
+        l10nID: `${config.addonRef}-menu-setAsMainNote`,
+        icon: `chrome://${config.addonRef}/content/icons/favicon.png`,
+        onShowing: (_, context: BNMenuContext) => {
+          const isNote = Boolean(
+            context.items &&
+              context.items.length > 0 &&
+              context.items.every(
+                (item) =>
+                  item &&
+                  (item.isNote
+                    ? item.isNote()
+                    : item.itemTypeID === Zotero.ItemTypes.getID("note")),
+              ),
+          );
+          context.setVisible(isNote);
+        },
+        onCommand: (_, context: BNMenuContext) => {
+          if (!context.items?.[0]) return;
+          const item = context.items[0];
+          Zotero.Prefs.set("betternotes.mainNoteID", String(item.id));
+
+          // Add to history
+          const recentPref =
+            Zotero.Prefs.get("betternotes.recentMainNoteIds") ||
+            Zotero.Prefs.get("Knowledge4Zotero.recentMainNoteIds") ||
+            "";
+          let recentIds = String(recentPref)
+            .split(",")
+            .filter((id) => id.trim().length > 0);
+          recentIds.unshift(String(item.id));
+          recentIds = Array.from(new Set(recentIds)).slice(0, 10);
+          Zotero.Prefs.set(
+            "betternotes.recentMainNoteIds",
+            recentIds.join(","),
+          );
+
+          Zotero.getMainWindow()?.ZoteroPane?.displayMessage(
+            "Note set as Main Note",
+          );
+        },
+      },
+      {
+        menuType: "menuitem",
+        l10nID: `${config.addonRef}-menu-openInWorkspaceTab`,
+        icon: `chrome://${config.addonRef}/content/icons/favicon.png`,
+        onShowing: (_, context: BNMenuContext) => {
+          const isNote = Boolean(
+            context.items &&
+              context.items.length > 0 &&
+              context.items.every(
+                (item) =>
+                  item &&
+                  (item.isNote
+                    ? item.isNote()
+                    : item.itemTypeID === Zotero.ItemTypes.getID("note")),
+              ),
+          );
+          context.setVisible(isNote);
+        },
+        onCommand: (_, context: BNMenuContext) => {
+          if (!context.items?.[0]) return;
+          addon.hooks.onOpenNote(context.items[0].id, "tab", {
+            forceTakeover: true,
+          });
+        },
+      },
+      {
+        menuType: "menuitem",
         l10nID: `${config.addonRef}-menu-openNoteAsBNWindow`,
         icon: `chrome://${config.addonRef}/content/icons/favicon.png`,
-        onShowing: (_, context) => {
-          context.setVisible(!!context.items?.every((item) => item.isNote()));
+        onShowing: (_, context: BNMenuContext) => {
+          const isNote = Boolean(
+            context.items &&
+              context.items.length > 0 &&
+              context.items.every(
+                (item) =>
+                  item &&
+                  (item.isNote
+                    ? item.isNote()
+                    : item.itemTypeID === Zotero.ItemTypes.getID("note")),
+              ),
+          );
+          context.setVisible(isNote);
         },
-        onCommand: (_, context) => {
+        onCommand: (_, context: BNMenuContext) => {
           if (!context.items?.length) {
             return;
           }

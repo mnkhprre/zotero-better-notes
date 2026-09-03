@@ -24,3 +24,7 @@ outbound-step3-middle =
     }
 
 outlinePicker-cursorLine = 🖋️İmleç (Satır{ $line })
+
+linkCreator-insert-position-label = Ekleme Konumu:
+linkCreator-insert-position-start = Bölümün Başı
+linkCreator-insert-position-end = Bölümün Sonu

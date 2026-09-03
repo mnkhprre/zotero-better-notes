@@ -27,6 +27,7 @@ declare namespace _ZoteroTypes {
       "editor.pinTableTop": boolean;
       "exportNotes.takeover": boolean;
       "annotationNote.enableTagSync": boolean;
+      "annotationNote.insertionIndex": number;
       "annotationNote.enableCreateNoteButton": boolean;
     };
   }
