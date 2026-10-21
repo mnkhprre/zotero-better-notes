@@ -31,6 +31,5 @@ menu-setAsMainNote =
     .label = Set as Main Note
 menu-openInWorkspaceTab =
     .label = Open in Workspace Tab
-
 menuTools-libraryGraph =
     .label = Note Relation Graph

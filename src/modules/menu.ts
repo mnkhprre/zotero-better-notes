@@ -1,4 +1,13 @@
 import { config } from "../../package.json";
+import { wait } from "zotero-plugin-toolkit";
+
+interface BNMenuContext {
+  items?: Zotero.Item[];
+  tabType: string;
+  tabID: string;
+  menuElem: XULElement;
+  setVisible: (visible: boolean) => void;
+}
 
 interface BNMenuContext {
   items?: Zotero.Item[];
@@ -298,6 +307,10 @@ export function registerMenus() {
           context.setVisible(isNote);
         },
         onCommand: (_, context: BNMenuContext) => {
+          if (!context.items?.length) {
+            return;
+          }
+
           if (!context.items?.length) {
             return;
           }

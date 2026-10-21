@@ -168,6 +168,18 @@ function initGlobalMainNoteButton(win: _ZoteroTypes.MainWindow) {
     }
   });
 
+  btn.addEventListener("click", () => {
+    const mainNoteId = parseInt(
+      String(Zotero.Prefs.get("betternotes.mainNoteID") || "0"),
+    );
+    if (mainNoteId > 0) {
+      onOpenNote(mainNoteId, "tab", { forceTakeover: true });
+    } else {
+      win.ZoteroPane.displayMessage(
+        "No Main Note set. Use right-click on a note to set it.",
+      );
+    }
+  });
   tabs.parentNode?.insertBefore(btn, tabs);
 }
 
@@ -320,8 +332,8 @@ async function onOpenNote<K extends keyof OpenNoteReturns>(
       mode = "preview" as K;
       workspaceUID = (
         currentWindow.document.querySelector("bn-workspace") as
-          | HTMLElement
-          | undefined
+        | HTMLElement
+        | undefined
       )?.dataset.uid;
     } else {
       mode = "tab" as K;

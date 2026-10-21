@@ -19,6 +19,14 @@ import { config } from "../../../package.json";
 let prefsObserver = Symbol();
 
 export function registerEditorInstanceHook() {
+  try {
+    ztoolkit.log(`[BN] Zotero.Notes: ${typeof Zotero.Notes}`);
+    ztoolkit.log(`[BN] registerEditorInstance: ${typeof Zotero.Notes?.registerEditorInstance}`);
+    ztoolkit.log(`[BN] _editorInstances: ${typeof Zotero.Notes?._editorInstances} len=${Zotero.Notes?._editorInstances?.length}`);
+  } catch (e) {
+    ztoolkit.log(`[BN] pre-check error`, e);
+  }
+
   new PatchHelper().setData({
     target: Zotero.Notes,
     funcSign: "registerEditorInstance",
@@ -41,7 +49,10 @@ export function registerEditorInstanceHook() {
     );
   });
 
-  // For unknown reasons, the css becomes undefined after font size change
+  prefsObserver = Zotero.Prefs.registerObserver("note.fontSize", () => {
+    Zotero.Notes._editorInstances.forEach((editor) => {
+
+
   prefsObserver = Zotero.Prefs.registerObserver("note.fontSize", () => {
     Zotero.Notes._editorInstances.forEach((editor) => {
       injectEditorCSS(editor._iframeWindow);
@@ -70,11 +81,9 @@ async function onEditorInstanceCreated(editor: Zotero.EditorInstance) {
     return;
   }
 
-  // item.getNote may not be initialized yet
   if (Zotero.ItemTypes.getID("note") !== editor._item.itemTypeID) {
     return;
   }
-  // The editor instance may be destroyed before the promise resolves
   try {
     await injectEditorScripts(editor._iframeWindow);
     injectEditorCSS(editor._iframeWindow);

@@ -45,8 +45,8 @@ const DEFAULT_TEMPLATES = <NoteTemplate[]>[
     comment = comment.trim();
     if (comment) {
       let html = await Zotero.BetterNotes.api.convert.md2html(comment);
-      html = html.replace(/color\\s*:\\s*[^;"']+;?/gi, "");
-      html = html.replace(/background-color\\s*:\\s*[^;"']+;?/gi, "");
+      html = html.replace(/color\s*:\s*[^;"']+;?/gi, "");
+      html = html.replace(/background-color\s*:\s*[^;"']+;?/gi, "");
       res += html;
     }
   }
