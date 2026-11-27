@@ -3,9 +3,9 @@
     "Knowledge4Zotero@windingwind.com": {
       "updates": [
         {
-          "version": "3.3.3.1",
-          "update_link": "https://github.com/mnkhprre/zotero-better-notes/releases/download/v3.3.3.1/better-notes-for-zotero.xpi",
-          "update_hash": "sha512:05d36a117e8b8da949efd771cad4fde52be10c231f0757d3e7a9657899440a11875cf80a15c49959b4b56618582ee9b7ac9b6db82826cb427d1abbcdd111acd0",
+          "version": "3.3.3.2",
+          "update_link": "https://github.com/mnkhprre/zotero-better-notes/releases/download/v3.3.3.2/better-notes-for-zotero.xpi",
+          "update_hash": "sha512:2ff72a698457125583ac1db091e7d61ead540b17a5f1ca77a04eed4f89fea34218b7c6b055d4d2a2ffb5585810d9eba8099bed0dff4e14c14e7df10358afc17a",
           "applications": {
             "zotero": {
               "strict_min_version": "8.0-beta.21",
