@@ -1,16 +1,22 @@
 # Better Notes for Zotero
 
-[![zotero target version](https://img.shields.io/badge/Zotero-8%2F9-green?style=flat-square&logo=zotero&logoColor=CC2936)](https://www.zotero.org)
-[![Using Zotero Plugin Template](https://img.shields.io/badge/Using-Zotero%20Plugin%20Template-blue?style=flat-square&logo=github)](https://github.com/windingwind/zotero-plugin-template)
-[![telegram group](https://img.shields.io/badge/Join%20Community-@bnzotero-blue?style=flat-square&logo=telegram)](https://t.me/boost/bnzotero)
+[![zotero target version](https://img.shields.io/badge/Zotero-8%20%7C%209%20%7C%2010-green?style=flat-square&logo=zotero&logoColor=CC2936)](https://www.zotero.org)
+[![based on upstream](https://img.shields.io/badge/based%20on-upstream%20v3.3.3-blue?style=flat-square&logo=github)](https://github.com/windingwind/zotero-better-notes)
+[![latest release](https://img.shields.io/github/v/release/mnkhprre/zotero-better-notes?style=flat-square)](https://github.com/mnkhprre/zotero-better-notes/releases/latest)
+[![license](https://img.shields.io/badge/license-AGPL--3.0-lightgrey?style=flat-square)](LICENSE)
 
 <div align=center><img src="./docs/res/teaser.png" width="800px"></img></div>
 
 Everything about note management. All in Zotero.
 
-Join the community on Telegram: [@bnzotero](https://t.me/boost/bnzotero)
+> [!NOTE]
+> **This is a fork.** It is the original [Better Notes](https://github.com/windingwind/zotero-better-notes) by [@windingwind](https://github.com/windingwind), rebased on upstream **v3.3.3**, with the workflow features of the old **0.8.8** release brought back: the _Main Note_ system, choosing where new links and annotations go, and cleaner notes made from annotations (Turkish placeholders included).
+>
+> 👉 Jump to [what's different in this fork](#-fork-features-mnkhprre-edition). For upstream bugs, questions and community templates, use the [upstream repository](https://github.com/windingwind/zotero-better-notes).
 
 ## 🧩 Outline
+
+[✨ Fork features](#-fork-features-mnkhprre-edition)
 
 [🧐 What is this?](#-what-is-this)
 
@@ -35,7 +41,7 @@ Join the community on Telegram: [@bnzotero](https://t.me/boost/bnzotero)
 
 [Note Export](#note-export)
 
-[GPT Integration](#gpt-integration)
+[LLM Integration](#llm-integration)
 
 [Action Workflow](#action-workflow)
 
@@ -49,11 +55,61 @@ Join the community on Telegram: [@bnzotero](https://t.me/boost/bnzotero)
 
 [🔔 Disclaimer](#-disclaimer)
 
-[🔎 My Zotero Plugins](#-my-zotero-plugins)
+[🙏 Credits](#-credits)
 
-[🫶 Sponsors](#-sponsors)
+## ✨ Fork features (mnkhprre edition)
 
-[🤗 Contributors](#-contributors)
+Everything upstream v3.3.3 offers (Markdown editor mode, the library-wide note relation graph, sync, export, templates…) is kept. On top of it, this fork adds:
+
+### 📌 Main Note system
+
+Pick one note as the hub of your current project and reach it from anywhere.
+
+| Where                                           | What it does                                                                                                                            |
+| ----------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------- |
+| **Home button** next to the Zotero tabs         | Opens your Main Note in a tab in one click.                                                                                             |
+| Library right-click → **Set as Main Note**      | Makes the selected note your Main Note.                                                                                                 |
+| New note menu → **Create Main Note**            | Creates a new note, sets it as the Main Note and opens it.                                                                              |
+| Note editor toolbar → **Recent Main Notes**     | Switch between your last 10 Main Notes.                                                                                                 |
+| Note editor toolbar → **Add link to Main Note** | Adds a link to the current note at the start or end of the Main Note, or inside one of its sections (with a _"Referred in"_ back-link). |
+| Library right-click → **Open in Workspace Tab** | Opens the note in a BN workspace tab.                                                                                                   |
+
+### 📍 Choose where things are inserted
+
+- **Link creator**: an _Insertion Position_ selector (start / end of the section) in both _Mention in_ and _Link to_.
+- **Notes from annotations**: Settings → Better Notes → _Insert new annotations into_ the start or the end of the note.
+
+### 🧹 Cleaner notes from annotations
+
+- The default `[QuickNoteV5]` template strips Turkish placeholders (`Seçilen Konum`, `Konum aranıyor...`), old `zotero://select` note links, text/background colours and extra blank lines from annotation comments.
+- As in 0.8.8, the annotation's comment gets a `note link: "zotero://note/..."` pointing to the note made from it, so the annotation and its note stay connected.
+
+### 🔍 Link preview
+
+- Hover previews show the **whole** linked note, not only the part around the link.
+- Clicking a preview opens the note in its own BN window.
+
+### 🪟 Compatibility
+
+- Runs on **Zotero 8, 9 and 10** (`strict_max_version` 10.99.99).
+- Works with tiling window managers: workspace windows no longer force their own position or minimum sizes.
+- Full English and **Turkish (tr-TR)** translations for the added features.
+
+See [CHANGELOG.md](CHANGELOG.md) for details per release.
+
+<details>
+<summary>🇹🇷 Türkçe özet</summary>
+
+Bu sürüm, [windingwind/zotero-better-notes](https://github.com/windingwind/zotero-better-notes) eklentisinin güncel **v3.3.3** sürümü üzerine kurulmuş bir çatallamadır (fork). Eski **0.8.8** sürümündeki şu özellikler geri getirilmiştir:
+
+- **Ana Not (Main Note) sistemi**: sekmelerin yanındaki ev simgesiyle ana nota tek tıkla gitme, sağ tık → _Ana Not Olarak Ayarla_, _Ana Not Oluştur_, son 10 ana not arasında geçiş ve ana notun istenen bölümüne bağlantı ekleme.
+- **Ekleme konumu seçimi**: bağlantıların bölümün başına/sonuna, açıklamalardan (annotation) oluşturulan notların notun başına/sonuna eklenmesi.
+- **Temiz notlar**: açıklama yorumlarındaki `Seçilen Konum`, `Konum aranıyor...` gibi yer tutucular, renkler ve fazla boş satırlar otomatik temizlenir.
+- **Zotero 8 / 9 / 10** desteği ve tam Türkçe arayüz.
+
+Kurulum için aşağıdaki [Install](#-install) bölümüne bakın.
+
+</details>
 
 ## 🧐 What is this?
 
@@ -80,7 +136,7 @@ and:
 <summary><b>📚 Knowledge Management & Linking</b></summary>
 
 - 🖇️ **Connect knowledge fragments** with _note link_. With one click. [Learn more →](#note-link)
-- 📌 **Main Note System**: Set any note as your "Main Note" and access it instantly via a dedicated toolbar button.
+- 📌 **Main Note System** _(fork)_: Set any note as your "Main Note" and access it instantly via a dedicated toolbar button. [Learn more →](#-main-note-system)
 - 🖥️ **Multi-Window Support**: Open as many note tabs or windows as you like!
 - 🗂️ **Note Templates**: Simplify and automate knowledge analysis with extensive note templates. [Learn more →](#note-template)
 
@@ -98,7 +154,7 @@ and:
 <summary><b>🧹 Editor Enhancements & Smart Cleaning</b></summary>
 
 - 📝 **Advanced Editor**: Enhancements for Zotero's note editor with outline, link relation, and image viewing.
-- 🧹 **Smart Turkish Cleaning**: Automatically cleans up Turkish placeholders (`Seçilen Konum`, `Konum aranıyor...`) and redundant links.
+- 🧹 **Smart Turkish Cleaning** _(fork)_: Automatically cleans up Turkish placeholders (`Seçilen Konum`, `Konum aranıyor...`) and redundant links. [Learn more →](#-cleaner-notes-from-annotations)
 - 🪄 **Magic Key**: Command palette for quick actions in the editor.
 - 🖼️ **Image Handling**: Resize images with right-click; preview with double-click.
 
@@ -112,14 +168,15 @@ and:
 
 </details>
 
-
 ## 👋 Install
 
-- Download the plugin (.xpi file) from below.
+- Download the plugin (.xpi file) from below. Works with Zotero 8, 9 and 10.
   - [Latest Release](https://github.com/mnkhprre/zotero-better-notes/releases/latest)
   - [All Releases](https://github.com/mnkhprre/zotero-better-notes/releases)
 
   _Note_: If you're using Firefox as your browser, right-click the `.xpi` and select "Save As.."
+
+  > ⚠️ This fork uses the same add-on ID as the original Better Notes, so it **replaces** it. Uninstall the original first, or simply install this `.xpi` over it — your notes and settings are kept.
 
 - In Zotero click `Tools` in the top menu bar and then click `Plugins`
 - Go to the Extensions page and then click the gear icon in the top right.
@@ -256,25 +313,6 @@ The [Actions & Tags](https://github.com/windingwind/zotero-actions-tags) plugin 
 - Resize images with a right-click menu.
 - Preview images with double-click/ctrl-click.
 
-### ✨ mnkhprre Edition Features (0.8.8 → 3.0.6)
-
-This version integrates the beloved features from the **0.8.8 fork** into the modern **3.0.6** codebase, optimized for Zotero 8:
-
-- **📌 Advanced Main Note System**:
-  - **Quick Access Button**: A global home icon next to your tabs for instant navigation to your Main Note.
-  - **Context Menu Integration**: Right-click any note in the library to "Set as Main Note".
-- **🧹 Smart Turkish Note Cleaning**:
-  - Automatically filters out Turkish metadata placeholders like `Seçilen Konum`, `Konum aranıyor...`, and `(Referred in)`.
-  - Cleans up redundant `note link` references and excessive newlines when creating notes from annotations.
-  - Ensures a high-fidelity, clean note structure out of the box.
-- **📍 Flexible Annotation Insertion**:
-  - Support for **Insert at Start** and **Insert at End** of notes.
-  - New context menu options to quickly set the insertion target as the current note.
-- **🚀 Zotero 8 Performance**:
-  - Fixed infinite refresh loops and editor stability issues introduced in official v3.0.6.
-  - Full compatibility with the new Zotero 8 native windowing system.
-
-
 ## 🧲 API
 
 BN provides APIs for other plugin developers in `Zotero.BetterNotes.api.${API_MODULE}`. See [`api.ts`](src/api.ts).
@@ -333,22 +371,16 @@ This will run the tests in the `./test` directory.
 
 Use this code under AGPL. No warranties are provided. Keep the laws of your locality in mind!
 
-## 🔎 My Zotero Plugins
+## 🙏 Credits
 
-- [Translate for Zotero](https://github.com/windingwind/zotero-pdf-translate): Translate PDF, EPub, webpage, metadata, annotations, notes to the target language.
-- [Actions & Tags for Zotero](https://github.com/windingwind/zotero-tag): Customize your Zotero workflow.
-- [Bionic for Zotero](https://github.com/windingwind/bionic-for-zotero): Bionic reading experience with Zotero.
+This fork would not exist without **[Better Notes](https://github.com/windingwind/zotero-better-notes)** by [@windingwind](https://github.com/windingwind) and its contributors. All the core features come from upstream; please support the original project:
 
-## 🙌 Sponsors
-
-Thanks
-[peachgirl100](https://github.com/peachgirl100), [Juan Gimenez](),
-and other anonymous sponsors!
-
-If you want to leave your name here, please email me or leave a message with the donation.
-
-## 🤗 Contributors
+- ⭐ Star and report upstream bugs at [windingwind/zotero-better-notes](https://github.com/windingwind/zotero-better-notes)
+- 💬 Join the upstream community on Telegram: [@bnzotero](https://t.me/boost/bnzotero)
+- 🧩 Other plugins by the same author: [Translate for Zotero](https://github.com/windingwind/zotero-pdf-translate), [Actions & Tags for Zotero](https://github.com/windingwind/zotero-actions-tags), [Bionic for Zotero](https://github.com/windingwind/bionic-for-zotero)
 
 <a href="https://github.com/windingwind/zotero-better-notes/graphs/contributors">
   <img src="https://contrib.rocks/image?repo=windingwind/zotero-better-notes" />
 </a>
+
+Fork maintained by [@mnkhprre](https://github.com/mnkhprre).
