@@ -1,5 +1,17 @@
 # Changelog
 
+## v3.3.3.2
+
+### 🩹 Fixes
+
+- Main Note button was missing on Zotero 10: the tab bar no longer has `#zotero-tabs`, so the button is now added to the tabs toolbar (right of the tabs, next to the tab menu)
+- Settings → About links point to this fork (Q&A stays upstream)
+- Tests: keep library tabs open between tests (Zotero 11) and drop the obsolete workspace test, from upstream v3.3.5
+
+### 📝 Docs
+
+- README screenshots of the fork features, taken on Zotero 10
+
 ## v3.3.3.1
 
 Fork release on top of upstream **v3.3.3**.

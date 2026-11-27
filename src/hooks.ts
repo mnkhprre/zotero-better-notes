@@ -120,7 +120,7 @@ async function onMainWindowLoad(win: _ZoteroTypes.MainWindow): Promise<void> {
   // @ts-ignore
   if (typeof win.goBuildEditContextMenu !== "function") {
     // @ts-ignore
-    win.goBuildEditContextMenu = () => { };
+    win.goBuildEditContextMenu = () => {};
   }
 
   // Create ztoolkit for every window
@@ -143,19 +143,25 @@ function initGlobalMainNoteButton(win: _ZoteroTypes.MainWindow) {
   const iconMainNote = `<svg t="1651124314636" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"><path d="M877.44 383.786667L624.426667 117.333333C594.986667 86.186667 554.88 69.12 512 69.12s-82.986667 17.066667-112.426667 48.213333L146.56 383.786667a148.266667 148.266667 0 0 0-40.746667 102.4v302.08c0 85.76 69.76 155.52 155.52 155.52h501.546667c85.76 0 155.52-69.76 155.52-155.52V485.973333c0-38.186667-14.506667-74.453333-40.96-102.186666z m-44.373333 404.266666c0 38.826667-31.573333 70.186667-70.186667 70.186667H261.333333c-38.826667 0-70.186667-31.573333-70.186666-70.186667V485.973333c0-16.213333 6.186667-31.786667 17.28-43.52L461.44 176c13.226667-13.866667 31.146667-21.546667 50.56-21.546667s37.333333 7.68 50.56 21.76l253.013333 266.453334c11.306667 11.733333 17.28 27.306667 17.28 43.52v301.866666z"></path><path d="M608 687.786667h-192c-23.466667 0-42.666667 19.2-42.666667 42.666666s19.2 42.666667 42.666667 42.666667h192c23.466667 0 42.666667-19.2 42.666667-42.666667s-19.2-42.666667-42.666667-42.666666z"></path></svg>`;
 
   const btnId = "bn-global-mainnote-btn";
-  if (win.document.getElementById(btnId)) return;
+  const doc = win.document;
+  if (doc.getElementById(btnId)) return;
 
-  const tabs = win.document.getElementById("zotero-tabs");
-  if (!tabs) return;
+  // Zotero 10+: the tab bar is React-rendered and has no #zotero-tabs;
+  // put the button at the start of the tabs toolbar (next to the tabs menu).
+  const tabsToolbar = doc.getElementById("zotero-tabs-toolbar");
+  // Older Zotero: insert before the #zotero-tabs element.
+  const legacyTabs = doc.getElementById("zotero-tabs");
+  if (!tabsToolbar && !legacyTabs) {
+    ztoolkit.log("[BN] No tab bar found, skipping Main Note button");
+    return;
+  }
 
-  const btn = win.document.createElement("toolbarbutton");
+  const btn = doc.createXULElement("toolbarbutton") as XULElement;
   btn.id = btnId;
-  btn.className = "toolbarbutton-1 zotero-toolbar-button";
-  btn.setAttribute("title", "Open Main Note");
-  btn.style.marginRight = "4px";
-  btn.innerHTML = iconMainNote;
+  btn.setAttribute("tooltiptext", "Open Main Note");
+  btn.setAttribute("aria-label", "Open Main Note");
 
-  btn.addEventListener("click", () => {
+  btn.addEventListener("command", () => {
     const mainNoteId = parseInt(
       String(Zotero.Prefs.get("betternotes.mainNoteID") || "0"),
     );
@@ -168,7 +174,22 @@ function initGlobalMainNoteButton(win: _ZoteroTypes.MainWindow) {
     }
   });
 
-  tabs.parentNode?.insertBefore(btn, tabs);
+  if (tabsToolbar) {
+    const svg = iconMainNote
+      .replace(/ t="\d+" class="icon"/, "")
+      .replace('width="16" height="16"', 'width="20" height="20"')
+      .replace('fill="currentColor"', 'fill="context-fill"');
+    btn.className = "zotero-tb-button";
+    btn.style.listStyleImage = `url("data:image/svg+xml;charset=utf-8,${encodeURIComponent(svg)}")`;
+    btn.style.setProperty("-moz-context-properties", "fill");
+    btn.style.fill = "var(--fill-secondary)";
+    tabsToolbar.insertBefore(btn, tabsToolbar.firstChild);
+  } else {
+    btn.className = "toolbarbutton-1 zotero-toolbar-button";
+    btn.style.marginRight = "4px";
+    btn.innerHTML = iconMainNote;
+    legacyTabs!.parentNode?.insertBefore(btn, legacyTabs!);
+  }
 }
 
 async function onMainWindowUnload(win: Window): Promise<void> {
@@ -367,8 +388,8 @@ async function onCreateMainNote() {
   // Add to history
   const recentPref = String(
     Zotero.Prefs.get("betternotes.recentMainNoteIds") ||
-    Zotero.Prefs.get("Knowledge4Zotero.recentMainNoteIds") ||
-    "",
+      Zotero.Prefs.get("Knowledge4Zotero.recentMainNoteIds") ||
+      "",
   );
   let recentIds = recentPref.split(",").filter((id) => id.trim().length > 0);
   recentIds.unshift(String(noteItem.id));

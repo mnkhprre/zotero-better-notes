@@ -65,19 +65,34 @@ Everything upstream v3.3.3 offers (Markdown editor mode, the library-wide note r
 
 Pick one note as the hub of your current project and reach it from anywhere.
 
-| Where                                           | What it does                                                                                                                            |
-| ----------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------- |
-| **Home button** next to the Zotero tabs         | Opens your Main Note in a tab in one click.                                                                                             |
-| Library right-click → **Set as Main Note**      | Makes the selected note your Main Note.                                                                                                 |
-| New note menu → **Create Main Note**            | Creates a new note, sets it as the Main Note and opens it.                                                                              |
-| Note editor toolbar → **Recent Main Notes**     | Switch between your last 10 Main Notes.                                                                                                 |
-| Note editor toolbar → **Add link to Main Note** | Adds a link to the current note at the start or end of the Main Note, or inside one of its sections (with a _"Referred in"_ back-link). |
-| Library right-click → **Open in Workspace Tab** | Opens the note in a BN workspace tab.                                                                                                   |
+<div align=center><img src="./docs/res/fork/main-note-workspace.png" width="800px" alt="A Main Note open in a note tab: outline on the left, the home button at the top right of the tab bar, and inbound/outbound links with the relation graph on the right"></div>
+
+| Where                                           | What it does                                                                                                                                                  |
+| ----------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **Home button** at the right of the tab bar     | Opens your Main Note in a tab in one click.                                                                                                                   |
+| Library right-click → **Set as Main Note**      | Makes the selected note your Main Note.                                                                                                                       |
+| New note menu → **Create Main Note**            | Creates a new note, sets it as the Main Note and opens it.                                                                                                    |
+| Note editor toolbar → **Recent Main Notes**     | Hover the house icon to switch between your last 10 Main Notes.                                                                                               |
+| Note editor toolbar → **Add link to Main Note** | Hover the link icon to add a link to the current note at the start or end of the Main Note, or inside one of its sections (with a _"Referred in"_ back-link). |
+| Library right-click → **Open in Workspace Tab** | Opens the note in a BN workspace tab.                                                                                                                         |
+
+<table>
+  <tr>
+    <td width="42%"><img src="./docs/res/fork/recent-main-notes.png" alt="Recent Main Notes menu listing three notes"></td>
+    <td width="58%"><img src="./docs/res/fork/add-link-to-main-note.png" alt="Add link menu with the Main Note's sections and a Start / End selector"></td>
+  </tr>
+  <tr>
+    <td align="center"><em>Recent Main Notes</em></td>
+    <td align="center"><em>Add link to Main Note: pick a section, start or end</em></td>
+  </tr>
+</table>
 
 ### 📍 Choose where things are inserted
 
-- **Link creator**: an _Insertion Position_ selector (start / end of the section) in both _Mention in_ and _Link to_.
+- **Add link to Main Note**: choose _Start_ or _End_ at the bottom of the menu (see above).
 - **Notes from annotations**: Settings → Better Notes → _Insert new annotations into_ the start or the end of the note.
+
+<div align=center><img src="./docs/res/fork/annotation-insert-setting.png" width="560px" alt="Better Notes settings: Insert new annotations into Start of note"></div>
 
 ### 🧹 Cleaner notes from annotations
 
@@ -89,9 +104,11 @@ Pick one note as the hub of your current project and reach it from anywhere.
 - Hover previews show the **whole** linked note, not only the part around the link.
 - Clicking a preview opens the note in its own BN window.
 
+<div align=center><img src="./docs/res/fork/link-preview.png" width="560px" alt="Hovering a note link shows the whole linked reading note"></div>
+
 ### 🪟 Compatibility
 
-- Runs on **Zotero 8, 9 and 10** (`strict_max_version` 10.99.99).
+- Runs on **Zotero 8, 9 and 10** (`strict_max_version` 10.99.99). Screenshots above are from Zotero 10.
 - Works with tiling window managers: workspace windows no longer force their own position or minimum sizes.
 - Full English and **Turkish (tr-TR)** translations for the added features.
 
