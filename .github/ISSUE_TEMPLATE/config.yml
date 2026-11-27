@@ -1,8 +1,11 @@
 blank_issues_enabled: false
 contact_links:
-  - name: Note Template Community
+  - name: Upstream Better Notes issues
+    url: https://github.com/windingwind/zotero-better-notes/issues
+    about: Bug in a feature that also exists in the original Better Notes? Check or report it upstream. Use this fork's tracker for fork-specific features (Main Note, insertion positions, Turkish cleaning, …).
+  - name: Note Template Community (upstream)
     url: https://github.com/windingwind/zotero-better-notes/discussions/categories/note-templates
     about: Find & contribute note templates here.
-  - name: Better Notes Q&A
+  - name: Better Notes Q&A (upstream)
     url: https://github.com/windingwind/zotero-better-notes/discussions/categories/q-a
     about: Please ask and answer questions (not feature requests or bug reports) here.

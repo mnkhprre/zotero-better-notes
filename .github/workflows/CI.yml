@@ -64,12 +64,16 @@ jobs:
           npm run release
           git config --global user.name "GitHub Actions"
           git config --global user.email "actions@github.com"
+          # A tag checkout is a detached HEAD: switch to master before
+          # committing, since installed builds read master/update.json
+          git fetch origin master
+          git checkout -B master origin/master
           cp build/update.json update.json
           cp build/update-beta.json update-beta.json || true
           git add update.json
           git add update-beta.json || true
-          git commit -m 'chore(publish): synchronizing `update.json`'
-          git push
+          git commit -m 'chore(publish): synchronizing `update.json`' || echo "update.json unchanged"
+          git push origin master
           sleep 1s
 
       - name: Notify release
