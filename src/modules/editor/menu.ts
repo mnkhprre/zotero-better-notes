@@ -27,10 +27,6 @@ function createMenuElement(doc: Document, options: MenuElementOptions) {
     if (!Zotero.isMac) {
       classList.push(
         options.tag === "menu" ? "menu-iconic" : "menuitem-iconic",
-
-    if (!Zotero.isMac) {
-      classList.push(
-        options.tag === "menu" ? "menu-iconic" : "menuitem-iconic",
       );
     }
     styles.listStyleImage = `url(${options.icon})`;

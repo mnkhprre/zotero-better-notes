@@ -12,58 +12,12 @@ export function patchNotes() {
         if (!win) {
           return;
         }
-        const workspace = win.workspace;
-        if (!workspace) {
-          return;
-        }
-        workspace.toggleOutline(open);
-      },
-    enabled: true,
-    pluginID: config.addonID,
-  });
-
-  new PatchHelper().setData({
-    target: Zotero.Notes,
-    funcSign: "setSidebarWidth",
-    patcher: () =>
-      function (width: number) {
-        const win = Zotero.getMainWindow();
-        if (!win) {
-          return;
-        }
-        const workspace = win.workspace;
-        if (!workspace) {
-          return;
-        }
-        workspace.setOutlineWidth(width);
-      },
-    enabled: true,
-    pluginID: config.addonID,
-  });
-        const win = Zotero.getMainWindow();
-        if (!win) {
-          return;
-        }
         const tabID = win.Zotero_Tabs.selectedID;
         const workspace = getWorkspaceByUID(tabID);
         if (!workspace) {
           return;
         }
         workspace.toggleOutline(open);
-  new PatchHelper().setData({
-    target: Zotero.Notes,
-    funcSign: "toggleSidebar",
-    patcher: () =>
-      function (open: boolean) {
-        const win = Zotero.getMainWindow();
-        if (!win) {
-          return;
-        }
-        const workspace = win.workspace;
-        if (!workspace) {
-          return;
-        }
-        workspace.toggleOutline(open);
       },
     enabled: true,
     pluginID: config.addonID,
@@ -74,19 +28,6 @@ export function patchNotes() {
     funcSign: "setSidebarWidth",
     patcher: () =>
       function (width: number) {
-        const win = Zotero.getMainWindow();
-        if (!win) {
-          return;
-        }
-        const workspace = win.workspace;
-        if (!workspace) {
-          return;
-        }
-        workspace.setOutlineWidth(width);
-      },
-    enabled: true,
-    pluginID: config.addonID,
-  });
         const win = Zotero.getMainWindow();
         if (!win) {
           return;
@@ -96,6 +37,9 @@ export function patchNotes() {
         if (!workspace) {
           return;
         }
-}
-
+        workspace.setOutlineWidth(width);
+      },
+    enabled: true,
+    pluginID: config.addonID,
+  });
 }

@@ -1,5 +1,24 @@
 # Changelog
 
+## v3.3.3.1
+
+Fork release on top of upstream **v3.3.3**.
+
+### 🚀 Features
+
+- Rebased on upstream v3.3.3: Markdown editor mode, library-wide note relation graph, Zotero 10 support
+- 0.8.8 Main Note system: home button next to the tabs, _Set as Main Note_, _Create Main Note_, _Recent Main Notes_, _Add link to Main Note_ (start, end or a chosen section), _Open in Workspace Tab_
+- Insertion position for the link creator (start / end of section) and for notes from annotations (start / end of note)
+- Annotation comments get a `note link` back to the note made from them
+- Hover previews show the full linked note
+
+### 🩹 Fixes
+
+- Repair the broken `master` merge (duplicated code that stopped the plugin from compiling, lost Markdown-mode imports, double Main Note button click handler, broken colour-stripping regexes in `[QuickNoteV5]`)
+- Keep the tiling window manager layout fixes from v3.2.2
+- `waitUtilAsync` rejects with an `Error` instead of `undefined`
+- Release workflow now commits `update.json` to `master`, so installed copies can auto-update
+
 ## v3.2.2
 
 ### 🚀 Features
@@ -35,4 +54,4 @@
 
 ---
 
-*Fork maintained by [mnkhprre](https://github.com/mnkhprre)*
+_Fork maintained by [mnkhprre](https://github.com/mnkhprre)_

@@ -155,6 +155,7 @@ body.pin-table-left.pin-table-top
      handle cover it (making a checked box unclickable). */
   color: var(--fill-secondary);
 }
+
 /* Better Notes: markdown mode (edit the note as markdown source) */
 body.bn-md-mode .editor-core,
 body.bn-md-mode .findbar {

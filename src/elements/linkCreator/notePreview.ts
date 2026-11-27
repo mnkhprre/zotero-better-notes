@@ -55,6 +55,7 @@ export class NotePreview extends PluginCEBase {
       <link
         rel="stylesheet"
         href="chrome://${config.addonRef}/content/lib/css/katex.min.css"
+        crossorigin="anonymous"
       />
       <style>
         html {

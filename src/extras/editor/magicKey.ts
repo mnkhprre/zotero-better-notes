@@ -188,9 +188,6 @@ class PluginState {
         getPlugin()?.blockquote.run();
       },
     },
-        getPlugin()?.blockquote.run();
-      },
-    },
     mathBlock: {
       command: () => {
         getPlugin()?.math_display.run();

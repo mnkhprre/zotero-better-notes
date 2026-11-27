@@ -1,4 +1,4 @@
-import { VirtualizedTableHelper, MessageHelper } from "zotero-plugin-toolkit";
+import { VirtualizedTableHelper } from "zotero-plugin-toolkit";
 import { LargePrefHelper } from "zotero-plugin-toolkit";
 
 import { SyncDataType } from "./modules/sync/managerWindow";
@@ -6,7 +6,6 @@ import hooks from "./hooks";
 import api from "./api";
 import { createZToolkit } from "./utils/ztoolkit";
 import { MessageHelper } from "zotero-plugin-toolkit";
-import { createZToolkit } from "./utils/ztoolkit";
 import type { handlers as parsingHandlers } from "./extras/parsingWorker";
 import type { handlers as relationHandlers } from "./extras/relationWorker";
 import type { handlers as convertHandlers } from "./extras/convertWorker/main";

@@ -11,6 +11,8 @@ import { getString } from "../../utils/locale";
 import { openLinkCreator } from "../../utils/linkCreator";
 import { slice } from "../../utils/str";
 import { waitUtilAsync } from "../../utils/wait";
+import { isMarkdownMode, toggleMarkdownMode } from "./markdownMode";
+import { getWorkspaceUID, getWorkspaceByUID } from "../../utils/workspace";
 
 export async function initEditorToolbar(editor: Zotero.EditorInstance) {
   if (editor._disableUI) {
@@ -153,7 +155,7 @@ export async function initEditorToolbar(editor: Zotero.EditorInstance) {
         btn.addEventListener("click", () => {
           try {
             popup.remove();
-          } catch (e) { }
+          } catch (e) {}
           callback();
         });
       }
@@ -171,10 +173,10 @@ export async function initEditorToolbar(editor: Zotero.EditorInstance) {
     const uniqueIds = Array.from(new Set(recentIds));
     const items = Zotero.Items.get(uniqueIds).filter((i) => i && !i.deleted);
 
-    addMenuItem("📋 Recent Main Notes", () => { }, true);
+    addMenuItem("📋 Recent Main Notes", () => {}, true);
 
     if (items.length === 0) {
-      addMenuItem("  (No recent main notes)", () => { });
+      addMenuItem("  (No recent main notes)", () => {});
     } else {
       for (const item of items) {
         addMenuItem(`📄 ${item.getNoteTitle() || "Untitled"}`, () => {
@@ -186,16 +188,16 @@ export async function initEditorToolbar(editor: Zotero.EditorInstance) {
     const leaveHandler = () => {
       try {
         popup.remove();
-      } catch (e) { }
+      } catch (e) {}
       try {
         wrapper.removeEventListener("mouseleave", leaveHandler);
-      } catch (e) { }
+      } catch (e) {}
     };
     setTimeout(() => {
       try {
         if (popup.parentElement)
           wrapper.addEventListener("mouseleave", leaveHandler);
-      } catch (e) { }
+      } catch (e) {}
     }, 100);
   });
   // --- END CUSTOM RECENT MAIN NOTES BTN ---
@@ -245,7 +247,7 @@ export async function initEditorToolbar(editor: Zotero.EditorInstance) {
       try {
         mainNoteId =
           parseInt(String(Zotero.Prefs.get("betternotes.mainNoteID"))) || 0;
-      } catch (e) { }
+      } catch (e) {}
       const mainNote = mainNoteId ? Zotero.Items.get(mainNoteId) : null;
       const curPos = String(
         Zotero.Prefs.get("betternotes.insertLinkPosition") || "end",
@@ -322,7 +324,7 @@ export async function initEditorToolbar(editor: Zotero.EditorInstance) {
                 if (!opts.persistent)
                   try {
                     popup.remove();
-                  } catch (e) { }
+                  } catch (e) {}
                 callback();
               },
             },
@@ -378,7 +380,7 @@ export async function initEditorToolbar(editor: Zotero.EditorInstance) {
                 if (nodes.length > 0 && nodes[0].model.level === 1) {
                   idx = nodes[0].model.lineIndex + 1; // v19: Safe under H1
                 }
-              } catch (e) { }
+              } catch (e) {}
             }
 
             await addon.api.note.insert(mainNote, html, idx, false);
@@ -449,7 +451,7 @@ export async function initEditorToolbar(editor: Zotero.EditorInstance) {
             );
           });
         } catch (e) {
-          addMenuItem("  (Error loading headings)", () => { });
+          addMenuItem("  (Error loading headings)", () => {});
         }
 
         // 3) Bottom Radio Selector (Sticky)
@@ -509,7 +511,7 @@ export async function initEditorToolbar(editor: Zotero.EditorInstance) {
           Zotero.Prefs.set("betternotes.mainNoteID", "0"),
         );
       } else if (!mainNote) {
-        addMenuItem("ℹ Set a Main Note first.", () => { });
+        addMenuItem("ℹ Set a Main Note first.", () => {});
       }
     };
 
@@ -804,37 +806,37 @@ async function registerEditorToolbarPopup(
       children: popupLines.map((props) => {
         return props.type === "splitter"
           ? {
-            tag: "div",
-            classList: ["separator"],
-            properties: {
-              id: props.id,
-            },
-          }
-          : {
-            tag: "button",
-            classList: ["option"],
-            properties: {
-              id: props.id,
-              innerHTML:
-                slice((props.prefix || "") + props.text, 50) +
-                (props.suffix || ""),
-              title: "",
-            },
-            listeners: [
-              {
-                type: "click",
-                listener: (e) => {
-                  Object.assign(e, { editor });
-                  props.callback &&
-                    props.callback(
-                      e as any as MouseEvent & {
-                        editor: Zotero.EditorInstance;
-                      },
-                    );
-                },
+              tag: "div",
+              classList: ["separator"],
+              properties: {
+                id: props.id,
               },
-            ],
-          };
+            }
+          : {
+              tag: "button",
+              classList: ["option"],
+              properties: {
+                id: props.id,
+                innerHTML:
+                  slice((props.prefix || "") + props.text, 50) +
+                  (props.suffix || ""),
+                title: "",
+              },
+              listeners: [
+                {
+                  type: "click",
+                  listener: (e) => {
+                    Object.assign(e, { editor });
+                    props.callback &&
+                      props.callback(
+                        e as any as MouseEvent & {
+                          editor: Zotero.EditorInstance;
+                        },
+                      );
+                  },
+                },
+              ],
+            };
       }),
     },
     popup,

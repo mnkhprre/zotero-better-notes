@@ -31,5 +31,6 @@ menu-setAsMainNote =
     .label = Ana Not Olarak Ayarla
 menu-openInWorkspaceTab =
     .label = Çalışma Alanı Sekmesinde Aç
+
 menuTools-libraryGraph =
     .label = Not İlişki Grafiği
