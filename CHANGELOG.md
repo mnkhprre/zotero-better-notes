@@ -1,5 +1,15 @@
 # Changelog
 
+## v3.3.4
+
+Same features as v3.3.3.2. The fork moves to three-part version numbers so the CI release workflow can publish it. (The release tool, `bumpp`, only accepts semantic versions such as `3.3.4`, so `3.3.3.2` could not be released by CI.)
+
+> ℹ️ This is the fork's own **v3.3.4**. It is still based on upstream v3.3.3 and is **not** upstream's v3.3.4.
+
+### 🏡 Chore
+
+- Version `3.3.4` in `package.json` and `package-lock.json`
+
 ## v3.3.3.2
 
 ### 🩹 Fixes
